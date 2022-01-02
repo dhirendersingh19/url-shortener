@@ -10,8 +10,10 @@ func UrlRouter(w http.ResponseWriter, r *http.Request) {
 	if path == "/url" {
 		switch r.Method {
 		case http.MethodGet:
+			urlsGetAll(w, r)
 			return
 		case http.MethodPost:
+			genrateUrl(w, r)
 			return
 		default:
 			postError(w, http.StatusMethodNotAllowed)

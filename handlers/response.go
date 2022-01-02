@@ -2,7 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
+	"io/ioutil"
 	"net/http"
+	"url-shortener/urls"
 )
 
 type jsonResponse map[string]interface{}
@@ -24,4 +27,21 @@ func postBodyResponse(w http.ResponseWriter, code int, content jsonResponse) {
 		return
 	}
 	w.WriteHeader(code)
+}
+
+func bodyToUser(r *http.Request, u *urls.Url) error {
+	if r == nil {
+		return errors.New("a request is required")
+	}
+	if r.Body == nil {
+		return errors.New("request body is empty")
+	}
+	if u == nil {
+		return errors.New("a user is required")
+	}
+	bd, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(bd, u)
 }
